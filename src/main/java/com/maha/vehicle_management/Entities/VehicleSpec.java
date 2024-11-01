@@ -1,13 +1,12 @@
 package com.maha.vehicle_management.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "VEHICLE_SPEC")
 public class VehicleSpec {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String type;
     String brand;

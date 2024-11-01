@@ -1,8 +1,6 @@
 package com.maha.vehicle_management.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -10,9 +8,10 @@ import java.time.LocalDateTime;
 @Table(name = "VEHICLE_REGISTER_INFO")
 public class VehicleRegisterInfo {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long Id;
     String plateNumber;
-    String teacherId;
+    Long teacherId;
     String courseName;
     LocalDateTime start;
     LocalDateTime end;
@@ -49,11 +48,11 @@ public class VehicleRegisterInfo {
         this.courseName = courseName;
     }
 
-    public String getTeacherId() {
+    public Long getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(String teacherId) {
+    public void setTeacherId(Long teacherId) {
         this.teacherId = teacherId;
     }
 

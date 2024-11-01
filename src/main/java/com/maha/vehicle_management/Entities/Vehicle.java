@@ -15,6 +15,18 @@ public class Vehicle {
     String currentInspectId;
     Boolean isRemoved;
 
+    public Vehicle() {
+        setRemoved(false);
+    }
+
+    public Vehicle(String plateNumber, Long specId, Double cost, String health) {
+        setPlateNumber(plateNumber);
+        setSpecId(specId);
+        setCost(cost);
+        setHealth(health);
+        setRemoved(false);
+    }
+
     public String getPlateNumber() {
         return plateNumber;
     }

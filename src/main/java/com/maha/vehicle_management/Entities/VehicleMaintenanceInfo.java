@@ -1,8 +1,6 @@
 package com.maha.vehicle_management.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -10,6 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "VEHICLE_MAINTENANCE_INFO")
 public class VehicleMaintenanceInfo {
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     Long Id;
     String plateNumber;
     LocalDateTime start;

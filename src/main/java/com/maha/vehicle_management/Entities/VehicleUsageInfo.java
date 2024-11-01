@@ -1,16 +1,22 @@
 package com.maha.vehicle_management.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "VEHICLE_USAGE_INFO")
 public class VehicleUsageInfo {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long Id;
     String plateNumber;
     Double fuelUsed;
+
+    public  VehicleUsageInfo() {}
+
+    public VehicleUsageInfo(String plateNumber, Double fuelUsed) {
+        this.plateNumber = plateNumber;
+        this.fuelUsed = fuelUsed;
+    }
 
     public Long getId() {
         return Id;
