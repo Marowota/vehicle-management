@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface VehicleRegisterInfoRepository extends JpaRepository<VehicleRegisterInfo, Long> {
@@ -12,4 +14,6 @@ public interface VehicleRegisterInfoRepository extends JpaRepository<VehicleRegi
             "(vri.start <= :#{#info.start} and :#{#info.start} <= vri.end) or " +
             "(vri.start <= :#{#info.end} and :#{#info.end} <= vri.end) ORDER BY vri.start DESC LIMIT 1")
     VehicleRegisterInfo findUsageInTime(VehicleRegisterInfo info);
+
+    List<VehicleRegisterInfo> findAllByPlateNumberLike(final String plateNumber);
 }

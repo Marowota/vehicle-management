@@ -109,4 +109,37 @@ public class VehicleService {
     public void maintenance(VehicleMaintenanceInfo maintenanceInfo){
         vehicleMaintenanceInfoRepository.save(maintenanceInfo);
     }
+
+    public RegisterResult editRegister(VehicleRegisterInfo registerInfo){
+        VehicleRegisterInfo exist = vehicleRegisterInfoRepository.findUsageInTime(registerInfo);
+        if (exist != null){
+            return RegisterResult.DATE_COLLISION;
+        }
+
+        Account teacherAccount = accountRepository.findOneById(registerInfo.getTeacherId());
+        if (teacherAccount == null){
+            return RegisterResult.NO_TEACHER;
+        }
+
+        vehicleRegisterInfoRepository.save(registerInfo);
+        return RegisterResult.ACCEPTED;
+    }
+
+    public void editLogUsage(String plateNumber, VehicleUsageInfo usageInfo){
+        vehicleUsageInfoRepository.save(usageInfo);
+    }
+
+    public void editInspect(String plateNumber, VehicleInspectionInfo inspectionInfo){
+        Vehicle vehicle = vehicleRepository.findOneByPlateNumber(plateNumber);
+        if (vehicle == null) return;
+        VehicleInspectionInfo savedInfo =  vehicleInspectionInfoRepository.save(inspectionInfo);
+        vehicle.setCurrentInspectId(savedInfo.getInspectionNo());
+        vehicleRepository.save(vehicle);
+    }
+
+    public void editMaintenance(VehicleMaintenanceInfo maintenanceInfo){
+        vehicleMaintenanceInfoRepository.save(maintenanceInfo);
+    }
+
+
 }
