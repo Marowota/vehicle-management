@@ -1,12 +1,6 @@
-package com.maha.vehicle_management.Entities;
+package com.maha.vehicle_management.DTO;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "VEHICLE_SPEC")
-public class VehicleSpec {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class VehicleSpecDTO {
     Long id;
     String type;
     String brand;

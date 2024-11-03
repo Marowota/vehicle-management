@@ -33,6 +33,15 @@ public class VehicleService {
         this.vehicleMaintenanceInfoRepository = vehicleMaintenanceInfoRepository;
     }
 
+    public List<Vehicle> get(){
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        return vehicles;
+    }
+
+    public Vehicle get(String plateNumber){
+        return vehicleRepository.findOneByPlateNumber(plateNumber);
+    }
+
     public void add(String plateNumber, VehicleSpec spec, Double cost, String health){
         VehicleSpec vehicleSpec = vehicleSpecRepository.save(spec);
         Vehicle vehicle = new Vehicle(plateNumber, vehicleSpec.getId(), cost, health);
@@ -60,8 +69,11 @@ public class VehicleService {
         vehicleRepository.save(vehicle);
     }
 
-    public List<Vehicle> search(String plateNumber){
-        List<Vehicle> vehicles = vehicleRepository.findByPlateNumberLike(plateNumber);
+    public List<Vehicle> search(String query){
+        StringBuilder sb = new StringBuilder();
+        sb.append("%").append(query).append("%");
+        System.out.println(sb.toString());
+        List<Vehicle> vehicles = vehicleRepository.findAllByPlateNumberLikeAndIsRemovedEquals(sb.toString(), false);
         return vehicles;
     }
 
@@ -71,12 +83,14 @@ public class VehicleService {
         if (exist != null){
             return RegisterResult.DATE_COLLISION;
         }
+
         Account teacherAccount = accountRepository.findOneById(registerInfo.getTeacherId());
         if (teacherAccount == null){
             return RegisterResult.NO_TEACHER;
         }
+
         vehicleRegisterInfoRepository.save(registerInfo);
-        return null;
+        return RegisterResult.ACCEPTED;
     }
 
     public void logUsage(String plateNumber, double fuelUsed){
@@ -91,6 +105,7 @@ public class VehicleService {
         vehicle.setCurrentInspectId(savedInfo.getInspectionNo());
         vehicleRepository.save(vehicle);
     }
+
     public void maintenance(VehicleMaintenanceInfo maintenanceInfo){
         vehicleMaintenanceInfoRepository.save(maintenanceInfo);
     }

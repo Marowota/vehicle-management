@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class VehicleUsageInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long Id;
+    Long id;
     String plateNumber;
     Double fuelUsed;
 
@@ -19,11 +19,11 @@ public class VehicleUsageInfo {
     }
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public Double getFuelUsed() {

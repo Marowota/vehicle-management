@@ -72,6 +72,6 @@ public class Vehicle {
     }
 
     public void setRemoved(Boolean removed) {
-        isRemoved = removed;
+        this.isRemoved = removed;
     }
 }

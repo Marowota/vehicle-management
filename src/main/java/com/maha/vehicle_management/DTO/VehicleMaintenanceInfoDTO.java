@@ -1,14 +1,8 @@
-package com.maha.vehicle_management.Entities;
-
-import jakarta.persistence.*;
+package com.maha.vehicle_management.DTO;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "VEHICLE_MAINTENANCE_INFO")
-public class VehicleMaintenanceInfo {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+public class VehicleMaintenanceInfoDTO {
     Long id;
     String plateNumber;
     LocalDateTime start;

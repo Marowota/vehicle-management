@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class VehicleRegisterInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long Id;
+    Long id;
     String plateNumber;
     Long teacherId;
     String courseName;
@@ -17,11 +17,11 @@ public class VehicleRegisterInfo {
     LocalDateTime end;
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public LocalDateTime getEnd() {
