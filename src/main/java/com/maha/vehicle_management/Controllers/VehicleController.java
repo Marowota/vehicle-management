@@ -34,7 +34,6 @@ public class VehicleController {
 
     @PostMapping
     public void addVehicle(@RequestBody VehicleDTO vehicleDTO) {
-        ModelMapper modelMapper = new ModelMapper();
         vehicleService.add(vehicleDTO.getPlateNumber(),
                             modelMapper.map(vehicleDTO.getVehicleSpec(), VehicleSpec.class),
                             vehicleDTO.getCost(),
@@ -44,7 +43,6 @@ public class VehicleController {
 
     @PutMapping
     public void updateVehicle(@RequestBody VehicleDTO vehicleDTO) {
-        ModelMapper modelMapper = new ModelMapper();
         vehicleService.edit(vehicleDTO.getPlateNumber(),
                             modelMapper.map(vehicleDTO.getVehicleSpec(), VehicleSpec.class),
                             vehicleDTO.getCost(),
