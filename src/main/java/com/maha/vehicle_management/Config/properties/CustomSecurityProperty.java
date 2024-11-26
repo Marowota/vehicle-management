@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties("app.custom.security")
 public class CustomSecurityProperty {
-    private String salt = "";
+    private String seed = "";
 
-    public String getSalt() {
-        return salt;
+    public String getSeed() {
+        return seed;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setSeed(String seed) {
+        this.seed = seed;
     }
 }
