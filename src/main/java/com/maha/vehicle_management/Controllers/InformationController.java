@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -46,8 +47,19 @@ public class InformationController {
     }
 
     @GetMapping("/register-info")
-    public List<VehicleRegisterInfoDTO> getRegisterInfo(@RequestParam(name = "query", required = false) String query){
-        List<VehicleRegisterInfo> result =  informationService.getVehiclesRegisterInfo(query);
+    public List<VehicleRegisterInfoDTO> getRegisterInfo(@RequestParam(name = "from", required = false) String stringFrom,
+                                                        @RequestParam(name = "to", required = false) String stringTo){
+        System.out.println(stringFrom);
+        System.out.println(stringTo);
+        LocalDateTime from = LocalDateTime.parse(stringFrom);
+        LocalDateTime to = LocalDateTime.parse(stringTo);
+        if (from == null) {
+            from = LocalDateTime.MIN;
+        }
+        if (to == null) {
+            to = LocalDateTime.MAX;
+        }
+        List<VehicleRegisterInfo> result =  informationService.getVehiclesRegisterInfo(from, to);
         List<VehicleRegisterInfoDTO> response = result.stream()
                 .map(x -> modelMapper.map(x, VehicleRegisterInfoDTO.class))
                 .toList();

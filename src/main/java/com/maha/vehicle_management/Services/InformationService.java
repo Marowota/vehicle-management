@@ -10,6 +10,7 @@ import com.maha.vehicle_management.Repositories.VehicleRegisterInfoRepository;
 import com.maha.vehicle_management.Repositories.VehicleUsageInfoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -33,11 +34,10 @@ public class InformationService {
         return vehicleMaintenanceInfoRepository.findAllByPlateNumberLike(sb.toString());
     }
 
-    public List<VehicleRegisterInfo> getVehiclesRegisterInfo(String query) {
-        if (query == null) query = "";
-        StringBuilder sb = new StringBuilder();
-        sb.append("%").append(query).append("%");
-        return vehicleRegisterInfoRepository.findAllByPlateNumberLike(sb.toString());
+    public List<VehicleRegisterInfo> getVehiclesRegisterInfo(LocalDateTime from, LocalDateTime to) {
+        System.out.println("from: " + from);
+                System.out.println("to: " + to);
+        return vehicleRegisterInfoRepository.findBetween(from, to);
     }
 
     public List<VehicleInspectionInfo> getVehicleInspectionInfo(String query) {

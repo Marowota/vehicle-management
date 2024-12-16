@@ -11,7 +11,7 @@ public class VehicleRegisterInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String plateNumber;
-    Long teacherId;
+    String teacherName;
     String courseName;
     LocalDateTime start;
     LocalDateTime end;
@@ -48,12 +48,13 @@ public class VehicleRegisterInfo {
         this.courseName = courseName;
     }
 
-    public Long getTeacherId() {
-        return teacherId;
+
+    public String getTeacherName() {
+        return teacherName;
     }
 
-    public void setTeacherId(Long teacherId) {
-        this.teacherId = teacherId;
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 
     public String getPlateNumber() {

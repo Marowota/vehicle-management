@@ -87,17 +87,11 @@ public class VehicleService {
         sb.append("%").append(query).append("%");
         System.out.println(sb.toString());
         List<Vehicle> vehicles = vehicleRepository.findAllByPlateNumberLikeAndIsRemovedEquals(sb.toString(), false);
-        List<VehicleSpecDTO> vehicleSpecs = vehicleSpecRepository.findByIdIn(vehicles.stream()
-                                                        .map(Vehicle::getSpecId)
-                                                        .collect(Collectors.toList()))
-                                                        .stream()
-                                                        .map((e) -> modelMapper.map(e, VehicleSpecDTO.class))
-                                                        .sorted(Comparator.comparing(VehicleSpecDTO::getId))
-                                                        .toList();
+
         List<VehicleDTO> vehicleDTOs = new ArrayList<>();
         for (int i = 0; i < vehicles.size(); i++){
             VehicleDTO tmp = modelMapper.map(vehicles.get(i), VehicleDTO.class);
-            tmp.setVehicleSpec(vehicleSpecs.get(i));
+            tmp.setVehicleSpec(modelMapper.map(vehicleSpecRepository.findOneById(vehicles.get(i).getSpecId()), VehicleSpecDTO.class));
             vehicleDTOs.add(tmp);
         }
         return vehicleDTOs;
@@ -108,11 +102,6 @@ public class VehicleService {
         VehicleRegisterInfo exist = vehicleRegisterInfoRepository.findUsageInTime(registerInfo);
         if (exist != null){
             return RegisterResult.DATE_COLLISION;
-        }
-
-        Account teacherAccount = accountRepository.findOneById(registerInfo.getTeacherId());
-        if (teacherAccount == null){
-            return RegisterResult.NO_TEACHER;
         }
 
         vehicleRegisterInfoRepository.save(registerInfo);
@@ -141,11 +130,11 @@ public class VehicleService {
         if (exist != null){
             return RegisterResult.DATE_COLLISION;
         }
-
-        Account teacherAccount = accountRepository.findOneById(registerInfo.getTeacherId());
-        if (teacherAccount == null){
-            return RegisterResult.NO_TEACHER;
-        }
+//
+//        Account teacherAccount = accountRepository.findOneById(registerInfo.getTeacherId());
+//        if (teacherAccount == null){
+//            return RegisterResult.NO_TEACHER;
+//        }
 
         vehicleRegisterInfoRepository.save(registerInfo);
         return RegisterResult.ACCEPTED;

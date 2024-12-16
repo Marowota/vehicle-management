@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class VehicleRegisterInfoDTO {
     Long id;
     String plateNumber;
-    Long teacherId;
+    String teacherName;
     String courseName;
     LocalDateTime start;
     LocalDateTime end;
@@ -26,12 +26,12 @@ public class VehicleRegisterInfoDTO {
         this.plateNumber = plateNumber;
     }
 
-    public Long getTeacherId() {
-        return teacherId;
+    public String getTeacherName() {
+        return teacherName;
     }
 
-    public void setTeacherId(Long teacherId) {
-        this.teacherId = teacherId;
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
     }
 
     public String getCourseName() {
