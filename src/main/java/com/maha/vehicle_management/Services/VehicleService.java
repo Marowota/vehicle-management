@@ -1,11 +1,17 @@
 package com.maha.vehicle_management.Services;
 
+import com.maha.vehicle_management.DTO.VehicleDTO;
+import com.maha.vehicle_management.DTO.VehicleSpecDTO;
 import com.maha.vehicle_management.Entities.*;
 import com.maha.vehicle_management.Models.enums.RegisterResult;
 import com.maha.vehicle_management.Repositories.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleService {
@@ -16,6 +22,7 @@ public class VehicleService {
     private final VehicleUsageInfoRepository vehicleUsageInfoRepository;
     private final VehicleInspectionInfoRepository vehicleInspectionInfoRepository;
     private final VehicleMaintenanceInfoRepository vehicleMaintenanceInfoRepository;
+    private final ModelMapper modelMapper;
 
     public VehicleService(AccountRepository accountRepository,
                           VehicleRepository vehicleRepository,
@@ -23,7 +30,7 @@ public class VehicleService {
                           VehicleRegisterInfoRepository vehicleRegisterInfoRepository,
                           VehicleUsageInfoRepository vehicleUsageInfoRepository,
                           VehicleInspectionInfoRepository vehicleInspectionInfoRepository,
-                          VehicleMaintenanceInfoRepository vehicleMaintenanceInfoRepository) {
+                          VehicleMaintenanceInfoRepository vehicleMaintenanceInfoRepository, ModelMapper modelMapper) {
         this.accountRepository = accountRepository;
         this.vehicleRepository = vehicleRepository;
         this.vehicleSpecRepository = vehicleSpecRepository;
@@ -31,6 +38,7 @@ public class VehicleService {
         this.vehicleUsageInfoRepository = vehicleUsageInfoRepository;
         this.vehicleInspectionInfoRepository = vehicleInspectionInfoRepository;
         this.vehicleMaintenanceInfoRepository = vehicleMaintenanceInfoRepository;
+        this.modelMapper = modelMapper;
     }
 
     public List<Vehicle> get(){
@@ -38,8 +46,13 @@ public class VehicleService {
         return vehicles;
     }
 
-    public Vehicle get(String plateNumber){
-        return vehicleRepository.findOneByPlateNumber(plateNumber);
+    public VehicleDTO get(String plateNumber){
+        Vehicle result = vehicleRepository.findOneByPlateNumber(plateNumber);
+        VehicleSpec spec =vehicleSpecRepository.findOneById(result.getSpecId());
+        VehicleDTO dto = modelMapper.map(result, VehicleDTO.class);
+        dto.setVehicleSpec(modelMapper.map(spec, VehicleSpecDTO.class));
+        return dto;
+
     }
 
     public void add(String plateNumber, VehicleSpec spec, Double cost, String health){
@@ -65,16 +78,29 @@ public class VehicleService {
     public void remove(String plateNumber){
         Vehicle vehicle = vehicleRepository.findOneByPlateNumber(plateNumber);
         if (vehicle == null) return;
-        vehicle.setRemoved(true);
+        vehicle.setIsRemoved(true);
         vehicleRepository.save(vehicle);
     }
 
-    public List<Vehicle> search(String query){
+    public List<VehicleDTO> search(String query){
         StringBuilder sb = new StringBuilder();
         sb.append("%").append(query).append("%");
         System.out.println(sb.toString());
         List<Vehicle> vehicles = vehicleRepository.findAllByPlateNumberLikeAndIsRemovedEquals(sb.toString(), false);
-        return vehicles;
+        List<VehicleSpecDTO> vehicleSpecs = vehicleSpecRepository.findByIdIn(vehicles.stream()
+                                                        .map(Vehicle::getSpecId)
+                                                        .collect(Collectors.toList()))
+                                                        .stream()
+                                                        .map((e) -> modelMapper.map(e, VehicleSpecDTO.class))
+                                                        .sorted(Comparator.comparing(VehicleSpecDTO::getId))
+                                                        .toList();
+        List<VehicleDTO> vehicleDTOs = new ArrayList<>();
+        for (int i = 0; i < vehicles.size(); i++){
+            VehicleDTO tmp = modelMapper.map(vehicles.get(i), VehicleDTO.class);
+            tmp.setVehicleSpec(vehicleSpecs.get(i));
+            vehicleDTOs.add(tmp);
+        }
+        return vehicleDTOs;
     }
 
     public RegisterResult register(VehicleRegisterInfo registerInfo){

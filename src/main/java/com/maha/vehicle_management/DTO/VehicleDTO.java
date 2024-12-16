@@ -28,7 +28,7 @@ public class VehicleDTO {
         return currentInspectId;
     }
 
-    public Boolean getRemoved() {
+    public Boolean getIsRemoved() {
         return isRemoved;
     }
 
@@ -52,7 +52,7 @@ public class VehicleDTO {
         this.currentInspectId = currentInspectId;
     }
 
-    public void setRemoved(Boolean removed) {
-        this.isRemoved = removed;
+    public void setIsRemoved(Boolean isRemoved) {
+        this.isRemoved = isRemoved;
     }
 }

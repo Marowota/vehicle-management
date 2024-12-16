@@ -29,13 +29,14 @@ public class HomeController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO userDTO) {
         UserDetails user;
+        System.out.println(userDTO.getUsername());
         try{
             user = userDetailsManager.loadUserByUsername(userDTO.getUsername());
         }
         catch (Exception e){
             return new ResponseEntity<String>("Wrong username or password", HttpStatus.UNAUTHORIZED);
         }
-        if (user == null && !passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
+        if (user != null && !passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
             return new ResponseEntity<String>("Wrong username or password", HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<ApiKey>(apiKeyAuthenticationService.getNewKey(userDTO.getUsername()), HttpStatus.OK);

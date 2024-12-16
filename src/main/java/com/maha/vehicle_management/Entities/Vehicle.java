@@ -16,7 +16,7 @@ public class Vehicle {
     Boolean isRemoved;
 
     public Vehicle() {
-        setRemoved(false);
+        setIsRemoved(false);
     }
 
     public Vehicle(String plateNumber, Long specId, Double cost, String health) {
@@ -24,7 +24,7 @@ public class Vehicle {
         setSpecId(specId);
         setCost(cost);
         setHealth(health);
-        setRemoved(false);
+        setIsRemoved(false);
     }
 
     public String getPlateNumber() {
@@ -67,11 +67,11 @@ public class Vehicle {
         this.currentInspectId = currentInspectId;
     }
 
-    public Boolean getRemoved() {
+    public Boolean getIsRemoved() {
         return isRemoved;
     }
 
-    public void setRemoved(Boolean removed) {
-        this.isRemoved = removed;
+    public void setIsRemoved(Boolean isRemoved) {
+        this.isRemoved = isRemoved;
     }
 }

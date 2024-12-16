@@ -1,14 +1,10 @@
 package com.maha.vehicle_management.Controllers;
 
-import com.maha.vehicle_management.DTO.LoginDTO;
 import com.maha.vehicle_management.Entities.Account;
-import com.maha.vehicle_management.Entities.Redis.ApiKey;
 import com.maha.vehicle_management.Models.CustomUserDetails;
-import com.maha.vehicle_management.Security.ApiKeyAuthenticationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +39,13 @@ public class AccountController {
     public String getSalt(@RequestParam("psw") String password) {
         return passwordEncoder.encode(password);
     }
+
+
+    @GetMapping("/verify")
+    public String getVerify() {
+        return "OK";
+    }
+
 
 }
 
