@@ -57,6 +57,13 @@ public class VehicleController {
         return RequestResult.SUCCESS;
     }
 
+
+    @GetMapping("/{id}/register/{regId}")
+    public VehicleRegisterInfoDTO getRegisterVehicle(@PathVariable("id") String plateNumber,
+                                          @PathVariable("regId") long regId) {
+        return vehicleService.getRegister(regId);
+    }
+
     @PostMapping("/{id}/register")
     public RegisterResult registerVehicle(@PathVariable("id") String plateNumber,
                                           @RequestBody VehicleRegisterInfoDTO registerInfo) {
@@ -108,5 +115,7 @@ public class VehicleController {
         vehicleService.editMaintenance(modelMapper.map(maintenanceInfoDTO, VehicleMaintenanceInfo.class));
         return RequestResult.SUCCESS;
     }
+
+
 
 }

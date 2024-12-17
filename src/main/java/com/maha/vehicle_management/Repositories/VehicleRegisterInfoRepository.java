@@ -13,13 +13,21 @@ import java.util.List;
 @Repository
 public interface VehicleRegisterInfoRepository extends JpaRepository<VehicleRegisterInfo, Long> {
     @Query("select vri from VehicleRegisterInfo vri where vri.plateNumber = :#{#info.plateNumber} and " +
-            "(vri.start <= :#{#info.start} and :#{#info.start} <= vri.end) or " +
-            "(vri.start <= :#{#info.end} and :#{#info.end} <= vri.end) ORDER BY vri.start DESC LIMIT 1")
+            "((vri.start <= :#{#info.start} and :#{#info.start} <= vri.end) or " +
+            "(vri.start <= :#{#info.end} and :#{#info.end} <= vri.end) or" +
+            "(:#{#info.start} <= vri.start and vri.end <= :#{#info.end}  ) ) ORDER BY vri.start DESC LIMIT 1")
     VehicleRegisterInfo findUsageInTime(VehicleRegisterInfo info);
 
+    @Query("select vri from VehicleRegisterInfo vri where vri.plateNumber = :#{#info.plateNumber} and " +
+            "vri.id <> :#{#info.id} and" +
+            "((vri.start <= :#{#info.start} and :#{#info.start} <= vri.end) or " +
+            "(vri.start <= :#{#info.end} and :#{#info.end} <= vri.end) or" +
+            "(:#{#info.start} <= vri.start and vri.end <= :#{#info.end}  ) ) ORDER BY vri.start DESC LIMIT 1")
+    VehicleRegisterInfo findUsageInTimeAndId(VehicleRegisterInfo info);
     @Query("select vri from VehicleRegisterInfo vri where " +
             "(:start <= vri.start and vri.end <= :end) ORDER BY vri.start")
     List<VehicleRegisterInfo> findBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
+    VehicleRegisterInfo findOneById(long id);
     List<VehicleRegisterInfo> findAllByPlateNumberLike(final String plateNumber);
 }

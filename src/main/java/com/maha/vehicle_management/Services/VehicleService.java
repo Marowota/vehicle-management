@@ -1,6 +1,7 @@
 package com.maha.vehicle_management.Services;
 
 import com.maha.vehicle_management.DTO.VehicleDTO;
+import com.maha.vehicle_management.DTO.VehicleRegisterInfoDTO;
 import com.maha.vehicle_management.DTO.VehicleSpecDTO;
 import com.maha.vehicle_management.Entities.*;
 import com.maha.vehicle_management.Models.enums.RegisterResult;
@@ -126,7 +127,8 @@ public class VehicleService {
     }
 
     public RegisterResult editRegister(VehicleRegisterInfo registerInfo){
-        VehicleRegisterInfo exist = vehicleRegisterInfoRepository.findUsageInTime(registerInfo);
+        System.out.println("id" + registerInfo.getId());
+        VehicleRegisterInfo exist = vehicleRegisterInfoRepository.findUsageInTimeAndId(registerInfo);
         if (exist != null){
             return RegisterResult.DATE_COLLISION;
         }
@@ -156,5 +158,8 @@ public class VehicleService {
         vehicleMaintenanceInfoRepository.save(maintenanceInfo);
     }
 
+    public VehicleRegisterInfoDTO getRegister(long id) {
+        return modelMapper.map(vehicleRegisterInfoRepository.findOneById(id), VehicleRegisterInfoDTO.class);
+    }
 
 }
