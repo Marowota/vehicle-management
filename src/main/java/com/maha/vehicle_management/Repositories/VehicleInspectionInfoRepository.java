@@ -22,4 +22,6 @@ public interface VehicleInspectionInfoRepository extends JpaRepository<VehicleIn
     @Query("select vii from VehicleInspectionInfo vii where " +
             "(:start <= vii.validUntil and vii.validUntil <= :end) ORDER BY vii.validUntil")
     List<VehicleInspectionInfo> findValidUntilBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    void removeByInspectionNo(final String inspectionNo);
 }

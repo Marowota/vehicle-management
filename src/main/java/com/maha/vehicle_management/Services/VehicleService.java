@@ -3,9 +3,11 @@ package com.maha.vehicle_management.Services;
 import com.maha.vehicle_management.DTO.VehicleDTO;
 import com.maha.vehicle_management.DTO.VehicleRegisterInfoDTO;
 import com.maha.vehicle_management.DTO.VehicleSpecDTO;
+import com.maha.vehicle_management.DTO.VehicleUsageInfoDTO;
 import com.maha.vehicle_management.Entities.*;
 import com.maha.vehicle_management.Models.enums.RegisterResult;
 import com.maha.vehicle_management.Repositories.*;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -161,5 +163,13 @@ public class VehicleService {
     public VehicleRegisterInfoDTO getRegister(long id) {
         return modelMapper.map(vehicleRegisterInfoRepository.findOneById(id), VehicleRegisterInfoDTO.class);
     }
-
+    @Transactional
+    public String deleteInspection(String inspectionNo) {
+        vehicleInspectionInfoRepository.removeByInspectionNo(inspectionNo);
+        return "Delete successfully";
+    }
+    public String deleteRegistration(Long id) {
+        vehicleRegisterInfoRepository.deleteById(id);
+        return "Delete successfully";
+    }
 }
