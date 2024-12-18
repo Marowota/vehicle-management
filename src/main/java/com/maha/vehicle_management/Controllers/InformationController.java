@@ -8,6 +8,7 @@ import com.maha.vehicle_management.Entities.VehicleInspectionInfo;
 import com.maha.vehicle_management.Entities.VehicleMaintenanceInfo;
 import com.maha.vehicle_management.Entities.VehicleRegisterInfo;
 import com.maha.vehicle_management.Entities.VehicleUsageInfo;
+import com.maha.vehicle_management.Models.enums.InspectionSearchType;
 import com.maha.vehicle_management.Services.InformationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -29,8 +31,21 @@ public class InformationController {
     }
 
     @GetMapping("/inspection-info")
-    public List<VehicleInspectionInfoDTO> getInspectionInfo(@RequestParam(name = "query", required = false) String query){
-        List<VehicleInspectionInfo> result =  informationService.getVehicleInspectionInfo(query);
+    public List<VehicleInspectionInfoDTO> getInspectionInfo(@RequestParam(name = "from", required = false) String stringFrom,
+                                                            @RequestParam(name = "to", required = false) String stringTo,
+                                                            @RequestParam(name = "query", required = false) String query,
+                                                            @RequestParam(name = "type", required = false) InspectionSearchType type){
+        System.out.println(stringFrom);
+        System.out.println(stringTo);
+        LocalDateTime from = LocalDateTime.parse(stringFrom);
+        LocalDateTime to = LocalDateTime.parse(stringTo);
+        List<VehicleInspectionInfo> result = new ArrayList<>();
+        if (type == InspectionSearchType.PLATE_NUMBER || type == InspectionSearchType.INSPECTION_NO) {
+            result = informationService.getVehicleInspectionInfo(query, type);
+        }
+        else if (type == InspectionSearchType.REGISTRATION_DATE || type == InspectionSearchType.VALID_UNTIL) {
+            result = informationService.getVehicleInspectionInfo(from, to, type);
+        }
         List<VehicleInspectionInfoDTO> response = result.stream()
                 .map(x -> modelMapper.map(x, VehicleInspectionInfoDTO.class))
                 .toList();

@@ -4,6 +4,7 @@ import com.maha.vehicle_management.Entities.VehicleInspectionInfo;
 import com.maha.vehicle_management.Entities.VehicleMaintenanceInfo;
 import com.maha.vehicle_management.Entities.VehicleRegisterInfo;
 import com.maha.vehicle_management.Entities.VehicleUsageInfo;
+import com.maha.vehicle_management.Models.enums.InspectionSearchType;
 import com.maha.vehicle_management.Repositories.VehicleInspectionInfoRepository;
 import com.maha.vehicle_management.Repositories.VehicleMaintenanceInfoRepository;
 import com.maha.vehicle_management.Repositories.VehicleRegisterInfoRepository;
@@ -40,11 +41,27 @@ public class InformationService {
         return vehicleRegisterInfoRepository.findBetween(from, to);
     }
 
-    public List<VehicleInspectionInfo> getVehicleInspectionInfo(String query) {
+    public List<VehicleInspectionInfo> getVehicleInspectionInfo(String query, InspectionSearchType type) {
         if (query == null) query = "";
         StringBuilder sb = new StringBuilder();
         sb.append("%").append(query).append("%");
-        return vehicleInspectionInfoRepository.findALlByPlateNumberLike(sb.toString());
+        if (type == InspectionSearchType.PLATE_NUMBER) {
+            return vehicleInspectionInfoRepository.findALlByPlateNumberLike(sb.toString());
+        }
+        else {
+            return vehicleInspectionInfoRepository.findAllByInspectionNoLike(sb.toString());
+        }
+    }
+
+    public List<VehicleInspectionInfo> getVehicleInspectionInfo(LocalDateTime from, LocalDateTime to, InspectionSearchType type) {
+        System.out.println("from: " + from);
+        System.out.println("to: " + to);
+        if (type == InspectionSearchType.REGISTRATION_DATE) {
+            return vehicleInspectionInfoRepository.findRegDateBetween(from, to);
+        }
+        else {
+            return vehicleInspectionInfoRepository.findValidUntilBetween(from, to);
+        }
     }
 
     public List<VehicleUsageInfo> getVehicleUsageInfo(String query) {
