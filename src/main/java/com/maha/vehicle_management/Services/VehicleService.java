@@ -5,6 +5,7 @@ import com.maha.vehicle_management.DTO.VehicleRegisterInfoDTO;
 import com.maha.vehicle_management.DTO.VehicleSpecDTO;
 import com.maha.vehicle_management.DTO.VehicleUsageInfoDTO;
 import com.maha.vehicle_management.Entities.*;
+import com.maha.vehicle_management.Models.enums.InspectionResult;
 import com.maha.vehicle_management.Models.enums.RegisterResult;
 import com.maha.vehicle_management.Repositories.*;
 import jakarta.transaction.Transactional;
@@ -116,12 +117,16 @@ public class VehicleService {
         vehicleUsageInfoRepository.save(usageInfo);
     }
 
-    public void inspect(String plateNumber, VehicleInspectionInfo inspectionInfo){
+    public InspectionResult inspect(String plateNumber, VehicleInspectionInfo inspectionInfo){
+        if (vehicleInspectionInfoRepository.findFirstByInspectionNo(inspectionInfo.getInspectionNo()) != null)  {
+            return InspectionResult.EXISTED;
+        }
         Vehicle vehicle = vehicleRepository.findOneByPlateNumber(plateNumber);
-        if (vehicle == null) return;
+        if (vehicle == null) return InspectionResult.MISSING_DATA;
         VehicleInspectionInfo savedInfo =  vehicleInspectionInfoRepository.save(inspectionInfo);
         vehicle.setCurrentInspectId(savedInfo.getInspectionNo());
         vehicleRepository.save(vehicle);
+        return InspectionResult.SUCCESS;
     }
 
     public void maintenance(VehicleMaintenanceInfo maintenanceInfo){

@@ -2,6 +2,7 @@ package com.maha.vehicle_management.Controllers;
 
 import com.maha.vehicle_management.DTO.*;
 import com.maha.vehicle_management.Entities.*;
+import com.maha.vehicle_management.Models.enums.InspectionResult;
 import com.maha.vehicle_management.Models.enums.RegisterResult;
 import com.maha.vehicle_management.Models.enums.RequestResult;
 import com.maha.vehicle_management.Services.VehicleService;
@@ -71,10 +72,9 @@ public class VehicleController {
     }
 
     @PostMapping("/{id}/set-inspection")
-    public RequestResult setInspectionInfo(@PathVariable("id") String plateNumber,
-                         @RequestBody VehicleInspectionInfoDTO inspectionInfo) {
-        vehicleService.inspect(plateNumber, modelMapper.map(inspectionInfo, VehicleInspectionInfo.class));
-        return RequestResult.SUCCESS;
+    public InspectionResult setInspectionInfo(@PathVariable("id") String plateNumber,
+                                              @RequestBody VehicleInspectionInfoDTO inspectionInfo) {
+        return vehicleService.inspect(plateNumber, modelMapper.map(inspectionInfo, VehicleInspectionInfo.class));
     }
 
     @PostMapping("/{id}/log-usage")
