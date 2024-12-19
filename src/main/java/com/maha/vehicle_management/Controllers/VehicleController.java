@@ -71,7 +71,7 @@ public class VehicleController {
         return vehicleService.register(modelMapper.map(registerInfo, VehicleRegisterInfo.class));
     }
 
-    @PostMapping("/{id}/set-inspection")
+    @PostMapping("/{id}/inspection")
     public InspectionResult setInspectionInfo(@PathVariable("id") String plateNumber,
                                               @RequestBody VehicleInspectionInfoDTO inspectionInfo) {
         return vehicleService.inspect(plateNumber, modelMapper.map(inspectionInfo, VehicleInspectionInfo.class));
@@ -96,7 +96,7 @@ public class VehicleController {
         return vehicleService.editRegister(modelMapper.map(registerInfo, VehicleRegisterInfo.class));
     }
 
-    @PutMapping("/{id}/set-inspection")
+    @PutMapping("/{id}/inspection")
     public RequestResult editSetInspectionInfo(@PathVariable("id") String plateNumber,
                                   @RequestBody VehicleInspectionInfoDTO inspectionInfo) {
         vehicleService.editInspect(plateNumber, modelMapper.map(inspectionInfo, VehicleInspectionInfo.class));
@@ -116,7 +116,7 @@ public class VehicleController {
         return RequestResult.SUCCESS;
     }
 
-    @DeleteMapping("/{id}/set-inspection")
+    @DeleteMapping("/{id}/inspection")
     public String deleteInspection(@PathVariable("id") String plateNumber, @RequestParam("id") String inspectionNo){
         return vehicleService.deleteInspection(inspectionNo);
     }

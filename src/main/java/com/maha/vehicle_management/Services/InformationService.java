@@ -71,5 +71,9 @@ public class InformationService {
         return vehicleUsageInfoRepository.findAllByPlateNumberLike(sb.toString());
     }
 
+    public VehicleInspectionInfo getVehicleInspectionInfoById(String id) {
+        return vehicleInspectionInfoRepository.findFirstByInspectionNo(id);
+    }
+
 
 }

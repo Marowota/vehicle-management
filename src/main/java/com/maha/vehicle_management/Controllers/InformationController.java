@@ -11,10 +11,7 @@ import com.maha.vehicle_management.Entities.VehicleUsageInfo;
 import com.maha.vehicle_management.Models.enums.InspectionSearchType;
 import com.maha.vehicle_management.Services.InformationService;
 import org.modelmapper.ModelMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,6 +25,11 @@ public class InformationController {
     public InformationController(InformationService informationService, ModelMapper modelMapper) {
         this.informationService = informationService;
         this.modelMapper = modelMapper;
+    }
+
+    @GetMapping("/inspection-info/{id}")
+    public VehicleInspectionInfo getInspectionInfoById(@PathVariable String id) {
+        return informationService.getVehicleInspectionInfoById(id);
     }
 
     @GetMapping("/inspection-info")
