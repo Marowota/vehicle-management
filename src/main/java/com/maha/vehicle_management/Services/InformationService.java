@@ -1,13 +1,11 @@
 package com.maha.vehicle_management.Services;
 
-import com.maha.vehicle_management.DTO.DashboardDTO;
-import com.maha.vehicle_management.DTO.MonthlyCostDTO;
-import com.maha.vehicle_management.DTO.VehicleInspectionInfoDTO;
-import com.maha.vehicle_management.DTO.VehicleRegisterInfoDTO;
+import com.maha.vehicle_management.DTO.*;
 import com.maha.vehicle_management.Entities.VehicleInspectionInfo;
 import com.maha.vehicle_management.Entities.VehicleMaintenanceInfo;
 import com.maha.vehicle_management.Entities.VehicleRegisterInfo;
 import com.maha.vehicle_management.Entities.VehicleUsageInfo;
+import com.maha.vehicle_management.Models.MaintenanceSearchType;
 import com.maha.vehicle_management.Models.enums.InspectionSearchType;
 import com.maha.vehicle_management.Repositories.*;
 import org.modelmapper.ModelMapper;
@@ -42,6 +40,17 @@ public class InformationService {
         StringBuilder sb = new StringBuilder();
         sb.append("%").append(query).append("%");
         return vehicleMaintenanceInfoRepository.findAllByPlateNumberLike(sb.toString());
+    }
+
+    public List<VehicleMaintenanceInfo> getVehiclesMaintenanceInfo(LocalDateTime from, LocalDateTime to, MaintenanceSearchType type) {
+        System.out.println("from: " + from);
+        System.out.println("to: " + to);
+        if (type == MaintenanceSearchType.START) {
+            return vehicleMaintenanceInfoRepository.findStartBetween(from, to);
+        }
+        else {
+            return vehicleMaintenanceInfoRepository.findEndBetween(from, to);
+        }
     }
 
     public List<VehicleRegisterInfo> getVehiclesRegisterInfo(LocalDateTime from, LocalDateTime to) {
@@ -83,6 +92,11 @@ public class InformationService {
     public VehicleInspectionInfo getVehicleInspectionInfoById(String id) {
         return vehicleInspectionInfoRepository.findFirstByInspectionNo(id);
     }
+
+    public VehicleMaintenanceInfo getVehicleMaintenanceInfoById(long id) {
+        return vehicleMaintenanceInfoRepository.findFirstById(id);
+    }
+
 
     public DashboardDTO getDashboardInfo(){
         DashboardDTO result = new DashboardDTO();

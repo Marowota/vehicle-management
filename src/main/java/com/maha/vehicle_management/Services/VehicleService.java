@@ -177,4 +177,10 @@ public class VehicleService {
         vehicleRegisterInfoRepository.deleteById(id);
         return "Delete successfully";
     }
+
+
+    public String deleteMaintenance(Long id) {
+        vehicleMaintenanceInfoRepository.deleteById(id);
+        return "Delete successfully";
+    }
 }

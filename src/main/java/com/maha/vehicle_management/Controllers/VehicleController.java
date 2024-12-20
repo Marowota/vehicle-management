@@ -126,4 +126,10 @@ public class VehicleController {
         return vehicleService.deleteRegistration(id);
     }
 
+    @DeleteMapping("/{id}/maintenance")
+    public String deleteMaintenance(@PathVariable("id") String plateNumber, @RequestParam("id") Long id){
+        return vehicleService.deleteMaintenance(id);
+    }
+
+
 }
