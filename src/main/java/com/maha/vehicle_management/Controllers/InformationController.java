@@ -1,9 +1,6 @@
 package com.maha.vehicle_management.Controllers;
 
-import com.maha.vehicle_management.DTO.VehicleInspectionInfoDTO;
-import com.maha.vehicle_management.DTO.VehicleMaintenanceInfoDTO;
-import com.maha.vehicle_management.DTO.VehicleRegisterInfoDTO;
-import com.maha.vehicle_management.DTO.VehicleUsageInfoDTO;
+import com.maha.vehicle_management.DTO.*;
 import com.maha.vehicle_management.Entities.VehicleInspectionInfo;
 import com.maha.vehicle_management.Entities.VehicleMaintenanceInfo;
 import com.maha.vehicle_management.Entities.VehicleRegisterInfo;
@@ -25,6 +22,11 @@ public class InformationController {
     public InformationController(InformationService informationService, ModelMapper modelMapper) {
         this.informationService = informationService;
         this.modelMapper = modelMapper;
+    }
+
+    @GetMapping("/dashboard")
+    public DashboardDTO getDashboard() {
+        return informationService.getDashboardInfo();
     }
 
     @GetMapping("/inspection-info/{id}")

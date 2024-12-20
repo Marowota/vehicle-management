@@ -1,17 +1,22 @@
 package com.maha.vehicle_management.Services;
 
+import com.maha.vehicle_management.DTO.DashboardDTO;
+import com.maha.vehicle_management.DTO.MonthlyCostDTO;
+import com.maha.vehicle_management.DTO.VehicleInspectionInfoDTO;
+import com.maha.vehicle_management.DTO.VehicleRegisterInfoDTO;
 import com.maha.vehicle_management.Entities.VehicleInspectionInfo;
 import com.maha.vehicle_management.Entities.VehicleMaintenanceInfo;
 import com.maha.vehicle_management.Entities.VehicleRegisterInfo;
 import com.maha.vehicle_management.Entities.VehicleUsageInfo;
 import com.maha.vehicle_management.Models.enums.InspectionSearchType;
-import com.maha.vehicle_management.Repositories.VehicleInspectionInfoRepository;
-import com.maha.vehicle_management.Repositories.VehicleMaintenanceInfoRepository;
-import com.maha.vehicle_management.Repositories.VehicleRegisterInfoRepository;
-import com.maha.vehicle_management.Repositories.VehicleUsageInfoRepository;
+import com.maha.vehicle_management.Repositories.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,12 +25,16 @@ public class InformationService {
     private final VehicleRegisterInfoRepository vehicleRegisterInfoRepository;
     private final VehicleInspectionInfoRepository vehicleInspectionInfoRepository;
     private final VehicleUsageInfoRepository vehicleUsageInfoRepository;
+    private final VehicleRepository vehicleRepository;
+    private final ModelMapper modelMapper;
 
-    public InformationService(VehicleMaintenanceInfoRepository vehicleMaintenanceInfoRepository, VehicleRegisterInfoRepository vehicleRegisterInfoRepository, VehicleInspectionInfoRepository vehicleInspectionInfoRepository, VehicleUsageInfoRepository vehicleUsageInfoRepository) {
+    public InformationService(VehicleMaintenanceInfoRepository vehicleMaintenanceInfoRepository, VehicleRegisterInfoRepository vehicleRegisterInfoRepository, VehicleInspectionInfoRepository vehicleInspectionInfoRepository, VehicleUsageInfoRepository vehicleUsageInfoRepository, VehicleRepository vehicleRepository, ModelMapper modelMapper) {
         this.vehicleMaintenanceInfoRepository = vehicleMaintenanceInfoRepository;
         this.vehicleRegisterInfoRepository = vehicleRegisterInfoRepository;
         this.vehicleInspectionInfoRepository = vehicleInspectionInfoRepository;
         this.vehicleUsageInfoRepository = vehicleUsageInfoRepository;
+        this.vehicleRepository = vehicleRepository;
+        this.modelMapper = modelMapper;
     }
 
     public List<VehicleMaintenanceInfo> getVehiclesMaintenanceInfo(String query) {
@@ -75,5 +84,26 @@ public class InformationService {
         return vehicleInspectionInfoRepository.findFirstByInspectionNo(id);
     }
 
+    public DashboardDTO getDashboardInfo(){
+        DashboardDTO result = new DashboardDTO();
+        result.setNumberOfVehicles(vehicleRepository.countVehicles());
+        result.setUsingVehiclesDetail(vehicleRegisterInfoRepository.findUsing(LocalDateTime.now()).stream().map((v) -> modelMapper.map(v, VehicleRegisterInfoDTO.class)).toList());
+        result.setUsingVehicles(result.getUsingVehiclesDetail().size());
+        result.setInspectedVehicles(vehicleInspectionInfoRepository.countInspected(LocalDateTime.now()).size());
+        long totalYearCost = vehicleInspectionInfoRepository.totalCost(LocalDateTime.now().with(TemporalAdjusters.firstDayOfYear()),
+                LocalDateTime.now().with(TemporalAdjusters.firstDayOfNextYear()).minusSeconds(1));
+        result.setTotalYearCost(totalYearCost);
+
+        result.setCostPerMonth(new ArrayList<Double>());
+        for (int i = 0; i < 12; i++){
+            result.getCostPerMonth().add(0.0);
+        }
+        List<MonthlyCostDTO> inspectionCost = vehicleInspectionInfoRepository.costByMonthThisYear();
+        inspectionCost.forEach((value) -> {
+            result.getCostPerMonth().set(value.getMonth() - 1, value.getCost());
+        });
+
+        return result;
+    }
 
 }

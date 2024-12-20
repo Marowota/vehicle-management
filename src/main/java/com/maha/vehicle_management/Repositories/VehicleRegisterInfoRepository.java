@@ -30,4 +30,8 @@ public interface VehicleRegisterInfoRepository extends JpaRepository<VehicleRegi
 
     VehicleRegisterInfo findOneById(long id);
     List<VehicleRegisterInfo> findAllByPlateNumberLike(final String plateNumber);
+
+
+    @Query("select vri from VehicleRegisterInfo as vri where vri.start <= :now and :now <= vri.end")
+    List<VehicleRegisterInfo> findUsing(LocalDateTime now);
 }
