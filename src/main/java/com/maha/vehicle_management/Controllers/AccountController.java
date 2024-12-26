@@ -2,6 +2,7 @@ package com.maha.vehicle_management.Controllers;
 
 import com.maha.vehicle_management.Entities.Account;
 import com.maha.vehicle_management.Models.CustomUserDetails;
+import com.maha.vehicle_management.Models.enums.AccountRequestResult;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,12 @@ public class AccountController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<Account> getAccountByUsername(@RequestParam String username) {
+        Account account = ((CustomUserDetails)userDetailsManager.loadUserByUsername(username)).getAccount();
+        account.setPassword("");
+        return new ResponseEntity<>(account, HttpStatus.OK);
+    }
 
     @PostMapping("/create")
     public ResponseEntity<String> createAccount(@RequestBody Account account) {
@@ -33,6 +40,13 @@ public class AccountController {
         CustomUserDetails userDetails = new CustomUserDetails(account);
         userDetailsManager.createUser(userDetails);
         return new ResponseEntity<>("User created", HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<AccountRequestResult> updateAccount(@RequestBody Account account) {
+        CustomUserDetails userDetails = new CustomUserDetails(account);
+        userDetailsManager.updateUser(userDetails);
+        return new ResponseEntity<>(AccountRequestResult.UPDATED, HttpStatus.OK);
     }
 
     @GetMapping("/get-hashed")

@@ -25,8 +25,8 @@ import java.util.List;
 public class SecurityConfig {
 
     @Bean
-    UserDetailsManager userDetailsService(AccountRepository accountRepository) {
-        return new CustomDBUserDetailsManager(accountRepository);
+    UserDetailsManager userDetailsService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+        return new CustomDBUserDetailsManager(accountRepository, passwordEncoder);
     }
 
     @Bean

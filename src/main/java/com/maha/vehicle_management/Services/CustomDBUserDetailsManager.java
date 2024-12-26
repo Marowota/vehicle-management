@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
@@ -19,21 +21,28 @@ public class CustomDBUserDetailsManager implements UserDetailsManager {
     private final AccountRepository accountRepository;
     private final SecurityContextHolderStrategy securityContextHolderStrategy
             = SecurityContextHolder.getContextHolderStrategy();
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomDBUserDetailsManager(AccountRepository accountRepository) {
+
+    public CustomDBUserDetailsManager(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void createUser(UserDetails user) {
         CustomUserDetails userDetails = (CustomUserDetails) user;
-        accountRepository.save(userDetails.getAccount());
+        Account tmp = userDetails.getAccount();
+        tmp.setPassword(passwordEncoder.encode(tmp.getPassword()));
+        accountRepository.save(tmp);
     }
 
     @Override
     public void updateUser(UserDetails user) {
         CustomUserDetails userDetails = (CustomUserDetails) user;
-        accountRepository.save(userDetails.getAccount());
+        Account tmp = userDetails.getAccount();
+        tmp.setPassword(passwordEncoder.encode(tmp.getPassword()));
+        accountRepository.save(tmp);
     }
 
     @Override

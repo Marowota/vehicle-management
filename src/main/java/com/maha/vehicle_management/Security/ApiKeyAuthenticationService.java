@@ -41,6 +41,7 @@ public class ApiKeyAuthenticationService {
 
     public ApiKey getNewKey(String username) {
         Account account = accountRepository.findOneByUsername(username);
+
         apiKeyRepository.removeByUid(account.getId().toString());
         ApiKey apiKey = new ApiKey();
 
