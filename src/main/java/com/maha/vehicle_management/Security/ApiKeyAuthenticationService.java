@@ -41,7 +41,6 @@ public class ApiKeyAuthenticationService {
 
     public ApiKey getNewKey(String username) {
         Account account = accountRepository.findOneByUsername(username);
-
         apiKeyRepository.removeByUid(account.getId().toString());
         ApiKey apiKey = new ApiKey();
 
@@ -53,8 +52,6 @@ public class ApiKeyAuthenticationService {
             noLoop++;
         } while (apiKeyRepository.findByKey(apiKey.getKey()) != null);
         System.out.println("Looped:" + noLoop);
-
-
         apiKey.setUid(account.getId().toString());
         apiKeyRepository.save(apiKey);
         return apiKey;
