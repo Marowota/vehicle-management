@@ -42,7 +42,7 @@ public class CustomDBUserDetailsManager implements UserDetailsManager {
         CustomUserDetails userDetails = (CustomUserDetails) user;
         Account tmp = userDetails.getAccount();
         tmp.setPassword(passwordEncoder.encode(tmp.getPassword()));
-        accountRepository.save(tmp);
+        accountRepository.changeInfo(tmp);
     }
 
     @Override
