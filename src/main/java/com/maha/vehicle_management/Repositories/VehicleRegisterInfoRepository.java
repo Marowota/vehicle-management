@@ -25,7 +25,9 @@ public interface VehicleRegisterInfoRepository extends JpaRepository<VehicleRegi
             "(:#{#info.start} <= vri.start and vri.end <= :#{#info.end}  ) ) ORDER BY vri.start DESC LIMIT 1")
     VehicleRegisterInfo findUsageInTimeAndId(VehicleRegisterInfo info);
     @Query("select vri from VehicleRegisterInfo vri where " +
-            "(:start <= vri.start and vri.end <= :end) ORDER BY vri.start")
+            "((vri.start <= :start and :start <= vri.end) or " +
+            "vri.start <= :end and :end <= vri.end or" +
+            "(:start <= vri.start and vri.end <= :end)) ORDER BY vri.start")
     List<VehicleRegisterInfo> findBetween(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     VehicleRegisterInfo findOneById(long id);
